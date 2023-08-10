@@ -1,0 +1,50 @@
+*nand
+
+.include 45nm_lvt.pm
+
+
+m1 out a vdd vdd pmos l=0.045u w=0.4u
+m2 out b vdd vdd pmos l=0.045u w=0.4u
+
+m3 out a x   0   nmos l=0.045u w=0.4u
+m4 x   b 0   0   nmos l=0.045u w=0.4u
+
+cl out 0 1p
+
+v_dd vdd 0 1
+va a 0 pulse(0 1 0 0.1n 0.1n 0.5 1)
+vb b 0 pulse(0 1 0 0.1n 0.1n 1 2)
+
+.control
+tran 0.1m 2
+
+run
+meas tran vmax MAX out from=0 to=2
+meas tran vmin MIN out from=0 to=2
+print vmax
+print vmin
+
+let v10=vmin+0.1*(vmax-vmin)
+let v50=vmin+0.5*(vmax-vmin)
+let v90=vmin+0.9*(vmax-vmin)
+
+
+meas tran tphl trig a val=v50  rise=1 targ out val=v50 fall=1
+meas tran tplh trig a  val=v50 fall=1 targ out val=v50 rise=1
+
+print tphl
+print tplh
+
+let tpd=(tphl+tplh)/2
+print tpd
+
+let power = (-v_dd#branch)*vdd
+plot power
+
+meas tran avgpower AVG power from=0 to=2
+print avgpower
+
+plot v(a)
+plot v(b)
+plot v(out)
+.endc
