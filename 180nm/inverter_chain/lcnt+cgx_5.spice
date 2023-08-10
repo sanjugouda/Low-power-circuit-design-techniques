@@ -1,0 +1,100 @@
+*inverter_chain 3 
+ 
+.include 180nm_lvt.txt
+.include 180nm_hvt.txt
+
+* netlist
+* m_instance_name drain_node gate_node source_node bulk_substrate_node model_name L=length W=width
+
+m1 x1   GP1 vdd vdd pmos  l=0.18u w=0.54u
+m2 out1 y1  x1  vdd pmos1 l=0.18u w=0.54u
+
+
+m3 out1 x1  y1    0  nmos  l=0.18u w=0.27u
+m4 y1   GN1 0    0  nmos1 l=0.18u w=0.27u
+
+m5 in  GN1 GP1  vdd pmos l=0.18u w=0.27u
+m6 in  GP1 GN1  0   nmos l=0.18u w=0.27u
+
+
+m7 x2   GP2 vdd vdd pmos  l=0.18u w=1.08u
+m8 out2 y2  x2  vdd pmos1 l=0.18u w=1.08u
+
+
+m9 out2 x2  y2    0  nmos  l=0.18u w=0.54u
+m10 y2   GN2 0    0  nmos1 l=0.18u w=0.54u
+
+m11 out1  GN2 GP2  vdd pmos l=0.18u w=0.27u
+m12 out1  GP2 GN2  0   nmos l=0.18u w=0.27u
+
+
+m13 x3   GP3 vdd vdd pmos  l=0.18u w=2.16u
+m14 out3 y3  x3  vdd pmos1 l=0.18u w=2.16u
+
+
+m15 out3 x3  y3    0  nmos  l=0.18u w=1.08u
+m16 y3   GN3 0    0  nmos1 l=0.18u w=1.08u
+
+m17 out2  GN3 GP3  vdd pmos l=0.18u w=0.27u
+m18 out2  GP3 GN3  0   nmos l=0.18u w=0.27u
+
+m19 x4   GP4 vdd vdd pmos  l=0.18u w=4.32u
+m20 out4 y4  x4  vdd pmos1 l=0.18u w=4.32u
+
+
+m21 out4 x4  y4    0  nmos  l=0.18u w=2.16u
+m22 y4   GN4 0    0  nmos1 l=0.18u w=2.16u
+
+m23 out3  GN4 GP4  vdd pmos l=0.18u w=0.27u
+m24 out3  GP4 GN4  0   nmos l=0.18u w=0.27u
+
+m25 x5   GP5 vdd vdd pmos  l=0.18u w=8.64u
+m26 out y5  x5  vdd pmos1 l=0.18u w=8.64u
+
+
+m27 out x5  y5    0  nmos  l=0.18u w=4.32u
+m28 y5   GN5 0    0  nmos1 l=0.18u w=4.32u
+
+m29 out4  GN5 GP5  vdd pmos l=0.18u w=0.27u
+m30 out4  GP5 GN5  0   nmos l=0.18u w=0.27u
+
+
+cl out 0 1p
+
+v_dd vdd 0 1.5
+
+v_in in 0 pulse(0 1.5 0 0.1n 0.1n 1 2)
+
+.control
+tran 1m 2
+
+run
+meas tran vmax MAX out from=0 to=2
+meas tran vmin MIN out from=0 to=2
+print vmax
+print vmin
+
+let v10=vmin+0.1*(vmax-vmin)
+let v50=vmin+0.5*(vmax-vmin)
+let v90=vmin+0.9*(vmax-vmin)
+
+
+meas tran tphl trig in val=v50 rise=1 targ out val=v50 fall=1
+meas tran tplh trig in val=v50 fall=1 targ out val=v50 rise=1
+
+print tphl
+print tplh
+
+let tpd=(tphl+tplh)/2
+print tpd
+
+let power = (-v_dd#branch)*vdd
+plot power
+
+meas tran avgpower AVG power from=0n to=2
+print avgpower
+
+plot v(in)
+plot v(out)
+
+.endc

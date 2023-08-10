@@ -1,0 +1,52 @@
+.include 180nm_lvt.txt
+  
+* netlist
+* m_instance_name drain_node gate_node source_node bulk_substrate_node model_name L=length W=width
+
+m1 out1 in vdd vdd pmos l=0.18u w=0.54u
+m2 out1 in 0    0  nmos l=0.18u w=0.27u 
+
+m3 out2 out1 vdd vdd pmos l=0.18u w=1.08u
+m4 out2 out1 0   0   nmos l=0.18u w=0.54u
+
+m5 out out2 vdd vdd pmos l=0.18u w=2.16u
+m6 out out2 0   0   nmos l=0.18u w=1.08u
+
+cl out 0 1p
+
+v_dd vdd 0 1.8
+
+v_in in 0 pulse(0 1.8 0 0.1n 0.1n 1 2)
+
+.control
+tran 0.1m 2
+
+run
+meas tran vmax MAX out from=0 to=2
+meas tran vmin MIN out from=0 to=2
+print vmax
+print vmin
+
+let v10=vmin+0.1*(vmax-vmin)
+let v50=vmin+0.5*(vmax-vmin)
+let v90=vmin+0.9*(vmax-vmin)
+
+
+meas tran tphl trig in val=v50 rise=1 targ out val=v50 fall=1
+meas tran tplh trig in val=v50 fall=1 targ out val=v50 rise=1
+
+print tphl
+print tplh
+
+let tpd=(tphl+tplh)/2
+print tpd
+
+let power = (-v_dd#branch)*vdd
+plot power
+meas tran avgpower AVG power from=0n to=2
+print avgpower
+
+plot v(in)
+plot v(out)
+plot -v_dd#branch
+.endc
