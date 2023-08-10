@@ -1,0 +1,58 @@
+*inverter 
+.include 45nm_lvt.pm
+.include 45nm_hvt.pm
+
+* netlist
+* m_instance_name drain_node gate_node source_node bulk_substrate_node model_name L=length W=width
+
+m1 x   GP vdd vdd pmos  l=0.045u w=0.8u
+m2 out y  x   vdd pmos1 l=0.045u w=0.8u
+
+
+m3 out x  y    0  nmos  l=0.045u w=0.4u
+m4 y   GN 0    0  nmos1 l=0.045u w=0.4u
+
+m5 in  GN GP  vdd pmos l=0.045u w=0.2u
+m6 in  GP GN  0   nmos l=0.045u w=0.2u
+
+
+cl out 0 1p
+
+v_dd vdd 0 0.7
+
+v_in in 0 pulse(0 0.7 0 0.1n 0.1n 1 2)
+
+.control
+tran 0.1m 2
+run
+meas tran vmax MAX out from=0 to=2
+meas tran vmin MIN out from=0 to=2
+
+print vmax
+print vmin
+
+let v10=vmin+0.1*(vmax-vmin)
+let v50=vmin+0.5*(vmax-vmin)
+let v90=vmin+0.9*(vmax-vmin)
+
+
+meas tran tphl trig in val=v50 rise=1 targ out val=v50 fall=1
+meas tran tplh trig in val=v50 fall=1 targ out val=v50 rise=1
+
+print tphl
+print tplh
+
+let tpd=(tphl+tplh)/2
+print tpd
+
+let power = (-v_dd#branch)*vdd
+plot power
+
+meas tran avgpower AVG power from=0n to=2
+print avgpower
+
+plot v(in)
+plot v(out)
+
+.endc
+.end

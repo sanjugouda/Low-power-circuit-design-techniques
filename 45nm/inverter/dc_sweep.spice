@@ -1,0 +1,30 @@
+*inverter 
+.include 45nm_lvt.pm
+.include 45nm_hvt.pm
+
+* netlist
+* m_instance_name drain_node gate_node source_node bulk_substrate_node model_name L=length W=width
+
+m1 out GP vdd  vdd pmos  l=0.045u w=0.4u
+m2 out out x   vdd pmos1 l=0.045u w=0.4u
+
+
+m3 out GN x    0  nmos  l=0.045u w=0.4u
+m4 x   GN 0    0  nmos1 l=0.045u w=0.4u
+
+m5 in  GN GP  vdd pmos l=0.045u w=0.2u
+m6 in  GP GN  0   nmos l=0.045u w=0.2u
+
+
+cl out 0 1p
+
+v_dd vdd 0 1
+vin in 0 dc 0
+
+.dc vin 0 1 0.1
+
+.control
+run
+plot v(out)
+.endc
+.end
