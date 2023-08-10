@@ -1,0 +1,76 @@
+*inverter 
+.include 45nm_lvt.pm
+.include 45nm_hvt.pm
+
+* netlist
+* m_instance_name drain_node gate_node source_node bulk_substrate_node model_name L=length W=width
+
+m1 out1 GP1 vdd  vdd pmos  l=0.045u w=0.4u
+m2 out1 out1 x1   vdd pmos1 l=0.045u w=0.4u
+
+
+m3 out1 GN1 x1    0  nmos  l=0.045u w=0.4u
+m4 x1   GN1 0    0  nmos1 l=0.045u w=0.4u
+
+m5 in  GN1 GP1  vdd pmos l=0.045u w=0.2u
+m6 in  GP1 GN1 0   nmos l=0.045u w=0.2u
+
+m7 out2 GP2 vdd  vdd pmos  l=0.045u w=0.8u
+m8 out2 out2 x2   vdd pmos1 l=0.045u w=0.8u
+
+
+m9 out2 GN2 x2    0  nmos  l=0.045u w=0.8u
+m10 x2   GN2 0    0  nmos1 l=0.045u w=0.8u
+
+m11 out1  GN2 GP2  vdd pmos l=0.045u w=0.2u
+m12 out1  GP2 GN2 0   nmos l=0.045u w=0.2u
+
+
+m13 out GP3 vdd  vdd pmos  l=0.045u w=1.6u
+m14 out out x3   vdd pmos1 l=0.045u w=1.6u
+
+
+m15 out  GN3 x3    0  nmos  l=0.045u w=1.6u
+m16 x3   GN3 0    0  nmos1 l=0.045u w=1.6u
+
+m17 out2  GN3 GP3  vdd pmos l=0.045u w=0.2u
+m18 out2  GP3 GN3 0   nmos l=0.045u w=0.2u
+
+cl out 0 1p
+
+v_dd vdd 0 1
+
+v_in in 0 pulse(0 1 0 0.1n 0.1n 1 2)
+
+.control
+tran 0.1m 2
+
+run
+meas tran vmax MAX out from=0 to=2
+meas tran vmin MIN out from=0 to=2
+print vmax
+print vmin
+
+let v10=vmin+0.1*(vmax-vmin)
+let v50=vmin+0.5*(vmax-vmin)
+let v90=vmin+0.9*(vmax-vmin)
+
+
+meas tran tphl trig in val=v50 rise=1 targ out val=v50 fall=1
+meas tran tplh trig in val=v50 fall=1 targ out val=v50 rise=1
+
+print tphl
+print tplh
+
+let tpd=(tphl+tplh)/2
+print tpd
+
+let power = (-v_dd#branch)*vdd
+plot power
+
+meas tran avgpower AVG power from=0n to=2
+print avgpower
+
+plot v(in)
+plot v(out)
+.endc
