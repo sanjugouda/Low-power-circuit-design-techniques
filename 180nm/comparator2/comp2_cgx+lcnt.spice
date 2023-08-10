@@ -1,0 +1,157 @@
+.include 180nm_lvt.txt
+.include 180nm_hvt.txt
+* netlist
+* m_instance_name drain_node gate_node source_node bulk_substrate_node model_name L=length W=width
+
+m1 oa1 a1 vdd  vdd pmos l=0.18u w=1.08u
+m2 oa1 a1 0    0  nmos l=0.18u w=0.54u
+
+m3 oa0 a0 vdd  vdd pmos l=0.18u w=1.08u
+m4 oa0 a0 0    0  nmos l=0.18u w=0.54u
+
+m5 ob1 b1 vdd  vdd pmos l=0.18u w=1.08u
+m6 ob1 b1 0    0  nmos l=0.18u w=0.54u
+
+m7 ob0 b0 vdd  vdd pmos l=0.18u w=1.08u
+m8 ob0 b0 0    0  nmos l=0.18u w=0.54u
+
+
+m9  a1 gna1 gpa1 vdd pmos1 l=0.18u w=0.27u
+m10 a1 gpa1 gna1 0   nmos1 l=0.18u w=0.27u
+
+m11 a0 gna0 gpa0 vdd pmos1 l=0.18u w=0.27u
+m12 a0 gpa0 gna0 0   nmos1 l=0.18u w=0.27u
+
+m13  b1 gnb1 gpb1 vdd pmos1 l=0.18u w=0.27u
+m14  b1 gpb1 gnb1 0   nmos1 l=0.18u w=0.27u
+
+m15  b0 gnb0 gpb0 vdd pmos1 l=0.18u w=0.27u
+m16  b0 gpb0 gnb0 0   nmos1 l=0.18u w=0.27u
+
+m17  oa1 gnoa1 gpoa1 vdd pmos1 l=0.18u w=0.27u
+m18  oa1 gpoa1 gnoa1 0   nmos1 l=0.18u w=0.27u
+
+m19 oa0 gnoa0 gpoa0 vdd pmos1 l=0.18u w=0.27u
+m20 oa0 gpoa0 gnoa0 0   nmos1 l=0.18u w=0.27u
+
+m21  ob1 gnob1 gpob1 vdd pmos1 l=0.18u w=0.27u
+m22  ob1 gpob1 gnob1 0   nmos1 l=0.18u w=0.27u
+
+m23  ob0 gnob0 gpob0 vdd pmos1 l=0.18u w=0.27u
+m24  ob0 gpob0 gnob0 0   nmos1 l=0.18u w=0.27u
+
+
+m25 p  gpoa1 vdd vdd pmos l=0.18u w=2.16u
+m26 p  gpoa0 vdd vdd pmos l=0.18u w=2.16u
+m27 p  gpob1 vdd vdd pmos l=0.18u w=2.16u
+m28 p  gpob0 vdd vdd pmos l=0.18u w=2.16u
+m29 out1 p1   p vdd pmos1 l=0.18u w=2.16u
+
+m30 out1  p    p1 0 nmos1 l=0.18u w=2.16u
+m31 p1   gnoa0 a  0 nmos l=0.18u w=2.16u
+m32 a    gnob0 b  0 nmos l=0.18u w=2.16u
+m33 b    gnoa1 c  0 nmos l=0.18u w=2.16u
+m34 c    gnob1 0  0 nmos l=0.18u w=2.16u
+
+
+
+m35 q  gpoa1 vdd vdd pmos l=0.18u w=2.16u
+m36 q  gpa0  vdd vdd pmos l=0.18u w=2.16u
+m37 q  gpob1 vdd vdd pmos l=0.18u w=2.16u
+m38 q  gpb0  vdd vdd pmos l=0.18u w=2.16u
+m39 out2 q1  q   vdd pmos1 l=0.18u w=2.16u
+
+
+m40 out2 q     q1 0 nmos1 l=0.18u w=2.16u
+m41 q1   gna0  d  0 nmos l=0.18u w=2.16u
+m42 d    gnb0  e  0 nmos l=0.18u w=2.16u
+m43 e    gnoa1 f  0 nmos l=0.18u w=2.16u
+m44 f    gnob1 0  0 nmos l=0.18u w=2.16u
+
+m45 r  gpa1  vdd vdd pmos l=0.18u w=2.16u
+m46 r  gpoa0 vdd vdd pmos l=0.18u w=2.16u
+m47 r  gpb1  vdd vdd pmos l=0.18u w=2.16u
+m48 r  gpob0 vdd vdd pmos l=0.18u w=2.16u
+m49 out3 r1  r   vdd pmos1 l=0.18u w=2.16u
+
+m50 out3 r    r1 0 nmos1 l=0.18u w=2.16u
+m51 r1  gnoa0 g  0 nmos l=0.18u w=2.16u
+m52 g   gnob0 h  0 nmos l=0.18u w=2.16u
+m53 h   gna1  i  0 nmos l=0.18u w=2.16u
+m54 i   gnb1  0  0 nmos l=0.18u w=2.16u
+
+
+
+m55 s  gpa1 vdd vdd pmos l=0.18u w=2.16u
+m56 s  gpa0 vdd vdd pmos l=0.18u w=2.16u
+m57 s  gpb1 vdd vdd pmos l=0.18u w=2.16u
+m58 s  gpb0 vdd vdd pmos l=0.18u w=2.16u
+m59 out4 s1 s   vdd pmos1 l=0.18u w=2.16u
+
+m60 out4 s  s1  0 nmos1 l=0.18u w=2.16u
+m61 s1  gna0 j  0 nmos l=0.18u w=2.16u
+m62 j   gnb0 k  0 nmos l=0.18u w=2.16u
+m63 k   gna1 l  0 nmos l=0.18u w=2.16u
+m64 l   gnb1 0  0 nmos l=0.18u w=2.16u
+
+
+
+m65 t  out1 vdd vdd pmos l=0.18u w=2.16u
+m66 t  out2 vdd vdd pmos l=0.18u w=2.16u
+m67 t  out3 vdd vdd pmos l=0.18u w=2.16u
+m68 t  out4 vdd vdd pmos l=0.18u w=2.16u
+m69 out t1   t  vdd pmos1 l=0.18u w=2.16u
+
+m70 out  t    t1 0 nmos1 l=0.18u w=2.16u
+m71 t1   out1 m  0 nmos l=0.18u w=2.16u
+m72 m    out2 n  0 nmos l=0.18u w=2.16u
+m73 n    out3 o  0 nmos l=0.18u w=2.16u
+m74 o    out4 0  0 nmos l=0.18u w=2.16u
+
+va1 a1 0 dc 0 pwl(0 0 1 0 1.000000001 0 2 0 2.000000001 1.8 3 1.8 4 1.8 4.000000001 0 5 0)
+va0 a0 0 dc 0 pwl(0 0 1 0 1.000000001 1.8 2 1.8 2.000000001 0 3 0 4 0 4.000000001 1.8 5 1.8)
+
+vb1 b1 0 dc 0 pwl(0 0 1 0 1.000000001 1.8 2 1.8 4 1.8 4.000000001 0 5 0)
+vb0 b0 0 dc 0 pwl(0 0 1 0 1.000000001 0 2 0 3 0 3.000000001 1.8 5 1.8) 
+
+co out 0 1p
+v_dd vdd 0 1.8
+.control
+tran 1m 5
+meas tran vmax MAX out from=0 to=3
+meas tran vmin MIN out from=0 to=3
+print vmax
+print vmin
+
+
+let v10=vmin+0.1*(vmax-vmin)
+let v50=vmin+0.5*(vmax-vmin)
+let v90=vmin+0.9*(vmax-vmin)
+
+
+meas tran d1 trig a1  val=v50 rise=1 targ out val=v50 rise=1
+meas tran d2 trig a1  val=v50 fall=1 targ out val=v50 rise=2
+
+print d1
+print d2
+
+let power = (-v_dd#branch)*vdd
+plot power
+
+meas tran avgpower1 AVG power from=0 to=1
+meas tran avgpower2 AVG power from=2 to=3
+meas tran avgpower3 AVG power from=4 to=5
+
+print avgpower1
+print avgpower2
+print avgpower3
+
+run
+plot v(a1)
+plot v(a0)
+plot v(b1)
+plot v(b0)
+plot v(out)
+.endc
+.end
+
